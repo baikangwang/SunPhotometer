@@ -10,3 +10,11 @@
   * unrar_1.py
 * Testing Data
   * test.rar
+
+## SunPhotometer.spdata
+
+MeteoInfo <http://www.meteothinker.com>
+
+![download](images/meteoinfo.png)
+
+![spdata](images/spdata.png)
