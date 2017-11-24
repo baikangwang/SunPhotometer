@@ -1,15 +1,20 @@
+import os
+import sys
+import datetime
 import Sunphotometer.spdata as spdata
-import glob
+from dataset.midata import * # for readtable
+import glob 
 
-ddir = 'C:/temp/data/AOD/download'
-k7dir = 'C:/temp/data/AOD/k7'
+baseDir="D:/Working/Projects/SunPhotometer/data/AOD/"
+ddir = os.path.join(baseDir, 'download')
+k7dir = os.path.join(baseDir, 'k7')
 t = datetime.datetime(2017,1,1)
 ddir = os.path.join(ddir, t.strftime('%Y%m'))
 if not os.path.exists(ddir):
     raise IOError    
 
 #Read stations from file
-stfn = 'C:/Temp/data/aod/stations_aod.csv'
+stfn = os.path.join(baseDir, 'stations_aod.csv')
 table = readtable(stfn, delimiter=',', format='%s%3f%s', encoding='gb2312')
 stids = table['Stid']
 

@@ -30,6 +30,10 @@ def download(stime, etime=None, stations=None, ftp_dir='/data2/cawas', data_dir=
     print 'Login ftp host...'
     ftp = FTP(ftp_ip)
     ftp.login(user, pword)
+    # ftp=FTP()
+    # ftp.connect(ftp_ip,21)
+    # ftp.sendcmd('USER '+user)
+    # ftp.sendcmd('PASS '+pword)
     
     #Download the data
     print 'Start download data...'
