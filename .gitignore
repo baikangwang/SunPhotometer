@@ -18,3 +18,5 @@ build/generated-sources/
 dist/
 test/
 data/
+source/EXAMPLE
+source/MeteoInfo_1.4.6R13.zip
