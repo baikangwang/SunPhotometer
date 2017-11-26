@@ -5,10 +5,10 @@ import Sunphotometer.spdata as spdata
 from dataset.midata import * # for readtable
 import glob 
 
-baseDir="D:/Working/Projects/SunPhotometer/data/AOD/"
+baseDir="D:\Working\Projects\SunPhotometer\data\AOD"
 ddir = os.path.join(baseDir, 'download')
 k7dir = os.path.join(baseDir, 'k7')
-t = datetime.datetime(2017,1,1)
+t = datetime.datetime(2009,1,1)
 ddir = os.path.join(ddir, t.strftime('%Y%m'))
 if not os.path.exists(ddir):
     raise IOError    
@@ -20,10 +20,10 @@ stids = table['Stid']
 
 #Loop - unrar files for each station
 for stid in stids:
-    stk7dir = os.path.join(k7dir, stid + '/' + t.strftime('%Y%m'))
+    stk7dir = os.path.join(k7dir, stid, t.strftime('%Y%m'))
     if not os.path.isdir(stk7dir):
         os.makedirs(stk7dir)
-    fns = glob.glob(ddir + '/*' + stid + '*.rar')
+    fns = glob.glob(os.path.join(ddir ,'*' + stid + '*.rar'))
     for fn in fns:
         if os.path.getsize(os.path.join(ddir, fn)) == 0:
             continue
