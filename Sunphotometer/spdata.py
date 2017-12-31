@@ -129,6 +129,8 @@ def cal_aot(wdir, calfn, taofn, nsufn, lat, lon, alt, insnum=1, cloud=1, no2=-2,
     #wdir = r'C:\Program Files (x86)\ASTPWin\PlugIns\Aot'
     exefn = os.path.join(wdir, 'ESPESOR.EXE')
     inputfn = os.path.join(wdir, 'inputpar.dat')
+    if ozone==-1:
+        ozonefn=os.path.join(wdir,ozonefn)
     f = open(inputfn, 'w')
     f.write(str(insnum) + '\n')     #Instrument number (according with “instruments.dat”)
     f.write(calfn + '\n')           #Path of the calibration file

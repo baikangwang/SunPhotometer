@@ -32,7 +32,8 @@ if not os.path.exists(nsufn):
 exefn = path.join(wdir, 'ESPESOR.EXE')
 inputfn = path.join(wdir, 'inputpar.dat')
 ozonefn = path.join(wdir, 'ozono.dat')
-calfn = path.join("D:\Working\Projects\SunPhotometer\Sunphotometer", "CalFile",'calibr746.cal')
+# calfn = path.join("D:\Working\Projects\SunPhotometer\Sunphotometer", "CalFile",'calibr746.cal')
+calfn = path.join("D:\Working\Projects\SunPhotometer\Sunphotometer", "CalFile",'calibr27.cal')
 taofn = path.join(aotdir,fn, fn +"_"+t.strftime("%Y%m")+'.tao')
 lat = 28.90#41.76
 lon = 121.63#123.41
