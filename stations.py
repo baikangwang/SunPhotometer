@@ -1,7 +1,8 @@
 import csv
 
+
 class Station:
-    def __init__(self,stId='',lat='',lon='',alt='',stname='',calibr=''):
+    def __init__(self, stId='', lat='', lon='', alt='', stname='', calibr=''):
         """A station object from the csv file, stations_aod.
 
         Parameters
@@ -18,13 +19,13 @@ class Station:
         -------
 
         """
-        self.stId=stId
-        self.lat=float(lat)
-        self.lon=float(lon)
-        self.alt=float(alt)
-        self.stname=stname
-        self.calibr=calibr
-    
+        self.stId = stId
+        self.lat = float(lat)
+        self.lon = float(lon)
+        self.alt = float(alt)
+        self.stname = stname
+        self.calibr = calibr
+
     def hasCalibr(self):
         """Check if the station has configured parameter file.
 
@@ -39,8 +40,9 @@ class Station:
         """
         return self.calibr != '' and self.calibr is not None
 
+
 class Stations:
-    
+
     def __init__(self):
         """The collection of the stations from the csv file, stations_aod.csv.
 
@@ -52,9 +54,9 @@ class Stations:
         -------
 
         """
-        self.__stations=dict()
-    
-    def read(self,csv_file):
+        self.__stations = dict()
+
+    def read(self, csv_file):
         """read station entries from csvfile.
 
         Parameters
@@ -63,16 +65,19 @@ class Stations:
 
         Returns
         -------
-        None
-        """   
-        with open(csv_file,'rb') as csvfile:
-            spamreader=csv.reader(csvfile,delimiter=",",quotechar='|')
+        Stations
+            the instance itself
+        """
+        with open(csv_file, 'rb') as csvfile:
+            spamreader = csv.reader(csvfile, delimiter=",", quotechar='|')
             for row in spamreader:
-                if row[0] is None or row[0] == "" or row[0]=="Stid": 
+                if row[0] is None or row[0] == "" or row[0] == "Stid":
                     continue
-                station=Station(row[0],row[1],row[2],row[3],row[4],row[5])
-                self.__stations[station.stId]=station
-    
+                station = Station(row[0], row[1], row[2],
+                                  row[3], row[4], row[5])
+                self.__stations[station.stId] = station
+        return self
+
     def get(self, stId):
         """Set docstring here.
 
