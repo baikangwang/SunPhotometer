@@ -19,3 +19,8 @@ dist/
 test/
 source/EXAMPLE
 source/MeteoInfo_1.4.6R13.zip
+
+## VS
+.vs/
+bin/
+obj/
