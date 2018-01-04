@@ -1327,6 +1327,11 @@ namespace BMap.NET.WindowsForm
                 Point p = MapHelper.GetScreenLocationByLatLng(_current_selected_marker.Location, _center, _zoom, ClientSize);
                 _bMarkerTipControl.Location = new Point(p.X - _bMarkerTipControl.Width / 3 + 37, p.Y - _bMarkerTipControl.Height - _current_selected_marker.Rect.Height);
             }
+            if (_bStationTipControl.Visible && _current_selected_marker != null) //同步位置
+            {
+                Point p = MapHelper.GetScreenLocationByLatLng(_current_selected_marker.Location, _center, _zoom, ClientSize);
+                _bStationTipControl.Location = new Point(p.X - _bStationTipControl.Width / 3 + 37, p.Y - _bStationTipControl.Height - _current_selected_marker.Rect.Height);
+            }
             if (_bPOITipControl.Visible && _current_selected_poi != null) //同步位置
             {
                 Point p = MapHelper.GetScreenLocationByLatLng(_current_selected_poi.Location, _center, _zoom, ClientSize);
