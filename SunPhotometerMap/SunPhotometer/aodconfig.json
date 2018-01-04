@@ -1,0 +1,88 @@
+﻿{
+  "fields": [
+    {
+      "raw": "Year",
+      "label": "Year",
+      "index": 0,
+      "visible": true
+    },
+    {
+      "raw": "Month",
+      "label": "Month",
+      "index": 1,
+      "visible": true
+    },
+    {
+      "raw": "Day",
+      "label": "Day",
+      "index": 2,
+      "visible": true
+    },
+    {
+      "raw": "Hour",
+      "label": "Hour",
+      "index": 3,
+      "visible": true
+    },
+    {
+      "raw": "Min",
+      "label": "Min",
+      "index": 4,
+      "visible": true
+    },
+    {
+      "raw": "Sec",
+      "label": "Sec",
+      "index": 5,
+      "visible": true
+    },
+    {
+      "raw": "TT1020",
+      "label": "AOD1020",
+      "index": 6,
+      "visible": true
+    },
+    {
+      "raw": "TT0871",
+      "label": "AOD871",
+      "index": 7,// !!!
+      "visible": true
+    },
+    {
+      "raw": "TT0670",
+      "label": "AOD670",
+      "index": 8,
+      "visible": true
+    },
+    {
+      "raw": "TT0440",
+      "label": "ADO440",
+      "index": 9,
+      "visible": true
+    },
+    {
+      "raw": "TT0872",
+      "label": "AOD872",
+      "index": 10, // !!!
+      "visible": true
+    },
+    {
+      "raw": "TT0870",
+      "label": "AOD870",
+      "index": 11,
+      "visible": true
+    },
+    {
+      "raw": "TT0873",
+      "label": "AOD873",
+      "index": 12, // !!!
+      "visible": true
+    },
+    {
+      "raw": "AlphaT1",
+      "label": "Alpha440/870",
+      "index": 13,
+      "visible": true
+    }
+  ]
+}
