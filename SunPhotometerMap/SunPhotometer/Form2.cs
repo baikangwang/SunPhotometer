@@ -28,6 +28,20 @@ namespace SunPhotometer
             this.bMap.EnableMapInfo = false;
             this.bMap.EnableToolsBar = false;
             this.bMap.MapStyle = MapStyle.Station;
+            this.bMap.StationVisibleChanged += BMap_StationVisibleChanged;
+        }
+
+        #region event handling methods
+
+        private object BMap_StationVisibleChanged(object sender, EventArgs e)
+        {
+            string csvfile = @"D:\Working\Projects\SunPhotometer\data\AOD\stations_aod.csv";
+
+            var stations = Stations.Read(csvfile);
+            var station = stations.FirstOrDefault(s => s.StationId == "54662");
+
+            var aod = new AOD(station, "200901");
+            return aod.ToDataTable();
         }
 
         private void Form2_Load(object sender, EventArgs e)
@@ -38,10 +52,10 @@ namespace SunPhotometer
 
             string csvfile = @"D:\Working\Projects\SunPhotometer\data\AOD\stations_aod.csv";
 
-            foreach(var station in Stations.Read(csvfile))
+            foreach (var station in Stations.Read(csvfile))
             {
                 this.bMap.AddMarks(new BMap.NET.WindowsForm.LatLngPoint(station.Lontitude, station.Latitude),
-                    station.Name,station.Name);
+                    station.Name, station.Name);
             }
         }
 
@@ -68,5 +82,7 @@ namespace SunPhotometer
         {
             this.bMap.MapStyle = ckbStyle.Checked ? MapStyle.Station : MapStyle.Normal;
         }
+
+        #endregion event handling methods
     }
 }

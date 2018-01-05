@@ -96,6 +96,7 @@
     <None Include="aodconfig.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="aodconfig.schema.json" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -118,4 +119,9 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties aodconfig_1json__JSONSchema="aodconfig.schema.json" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>

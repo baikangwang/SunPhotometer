@@ -4,85 +4,141 @@
       "raw": "Year",
       "label": "Year",
       "index": 0,
-      "visible": true
+      "visible": true,
+      "datatype": "int"
     },
     {
       "raw": "Month",
       "label": "Month",
       "index": 1,
-      "visible": true
+      "visible": true,
+      "datatype": "int"
     },
     {
       "raw": "Day",
       "label": "Day",
       "index": 2,
-      "visible": true
+      "visible": true,
+      "datatype": "int"
     },
     {
       "raw": "Hour",
       "label": "Hour",
       "index": 3,
-      "visible": true
+      "visible": true,
+      "datatype": "int"
     },
     {
       "raw": "Min",
       "label": "Min",
       "index": 4,
-      "visible": true
+      "visible": true,
+      "datatype": "int"
     },
     {
       "raw": "Sec",
       "label": "Sec",
       "index": 5,
-      "visible": true
+      "visible": true,
+      "datatype": "float"
     },
     {
-      "raw": "TT1020",
-      "label": "AOD1020",
+      "raw": "TT0340",
+      "label": "AOD340",
       "index": 6,
-      "visible": true
+      "visible": true,
+      "datatype": "float"
     },
     {
-      "raw": "TT0871",
-      "label": "AOD871",
-      "index": 7,// !!!
-      "visible": true
+      "raw": "TT0341",
+      "label": "AOD341",
+      "index": 7,
+      "visible": true,
+      "datatype": "float"
+    },
+    {
+      "raw": "TT0348",
+      "label": "AOD348",
+      "index": 8,
+      "visible": true,
+      "datatype": "float"
+    },
+    {
+      "raw": "TT0380",
+      "label": "AOD380",
+      "index": 9,
+      "visible": true,
+      "datatype": "float"
+    },
+    {
+      "raw": "TT0440",
+      "label": "AOD440",
+      "index": 10,
+      "visible": true,
+      "datatype": "float"
+    },
+    {
+      "raw": "TT0500",
+      "label": "AOD500",
+      "index": 11,
+      "visible": true,
+      "datatype": "float"
     },
     {
       "raw": "TT0670",
       "label": "AOD670",
-      "index": 8,
-      "visible": true
-    },
-    {
-      "raw": "TT0440",
-      "label": "ADO440",
-      "index": 9,
-      "visible": true
-    },
-    {
-      "raw": "TT0872",
-      "label": "AOD872",
-      "index": 10, // !!!
-      "visible": true
+      "index": 12,
+      "visible": true,
+      "datatype": "float"
     },
     {
       "raw": "TT0870",
       "label": "AOD870",
-      "index": 11,
-      "visible": true
+      "index": 13,
+      "visible": true,
+      "datatype": "float"
+    },
+    {
+      "raw": "TT0871",
+      "label": "AOD871",
+      "index": 14,
+      "visible": true,
+      "datatype": "float"
+    },
+    {
+      "raw": "TT0872",
+      "label": "AOD872",
+      "index": 15,
+      "visible": true,
+      "datatype": "float"
     },
     {
       "raw": "TT0873",
       "label": "AOD873",
-      "index": 12, // !!!
-      "visible": true
+      "index": 16,
+      "visible": true,
+      "datatype": "float"
+    },
+    {
+      "raw": "TT1020",
+      "label": "AOD1020",
+      "index": 17,
+      "visible": true,
+      "datatype": "float"
+    },
+    {
+      "raw": "TT1640",
+      "label": "AOD1640",
+      "index": 18,
+      "visible": true,
+      "datatype": "float"
     },
     {
       "raw": "AlphaT1",
       "label": "Alpha440/870",
-      "index": 13,
-      "visible": true
+      "index": 20,
+      "visible": true,
+      "datatype": "float"
     }
   ]
 }
