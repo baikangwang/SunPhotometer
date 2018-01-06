@@ -1,3 +1,8 @@
+"""
+class AodProcess
+
+"""
+
 import os
 import sys
 import os.path as path
@@ -26,7 +31,7 @@ class AodProcess:
         Returns
         -------
 
-        """   
+        """
         self.__download(year, month, day)
 
         self.__unrar(year, month, day)
@@ -35,6 +40,30 @@ class AodProcess:
 
         self.__cal_aod(year, month, day)
 
+    def run(self, year, month, day, step=1):
+        """run step by step for dev testing
+
+        Parameters
+        ----------
+        self: 
+        year: the year of date range
+        month: the moth of date range
+        day: the day of date range
+        step=1: the process steps, 1=download, 2=unrar, 3=merge, 4=
+
+        Returns
+        -------
+
+        """
+
+        if step == 1:
+            self.__download(year, month, day)
+        if step == 2:
+            self.__unrar(year, month, day)
+        if step == 3:
+            self.__merge(year, month, day)
+        if step == 4:
+            self.__cal_aod(year, month, day)
 
     def __download(self, year, month, day):
         """download k7 data through ftp.
@@ -50,10 +79,11 @@ class AodProcess:
         -------
 
         """
-
+        print 'Download...'
         t = datetime.datetime(year, month, day)
-        spdata.download(stime=t, ftp_dir=self.aodSetting.ftp_root, data_dir=self.aodSetting.download_dir, ftp_ip=self.aodSetting.ftp_ip,
+        spdata.download(stime=t, ftp_dir=self.aodSetting.ftp_root, data_dir=self.aodSetting.dd_dir, ftp_ip=self.aodSetting.ftp_ip,
                         user=self.aodSetting.ftp_user, pword=self.aodSetting.ftp_psw)
+        print 'Download Done!'
 
     def __unrar(self, year, month, day):
         """unzip the downloaded k7 files.
@@ -69,7 +99,7 @@ class AodProcess:
         -------
 
         """
-
+        print 'Un-rar...'
         k7dir = self.aodSetting.k7_dir
         t = datetime.datetime(year, month, day)
         ddir = os.path.join(self.aodSetting.dd_dir, t.strftime('%Y%m'))
@@ -80,18 +110,18 @@ class AodProcess:
 
         # Loop - unrar files for each station
         for stid in stids:
-            stk7dir = os.path.join(k7dir, stid, t.strftime('%Y%m'))
-            if not os.path.isdir(stk7dir):
-                os.makedirs(stk7dir)
             fns = glob.glob(os.path.join(ddir, '*' + stid + '*.rar'))
             for fn in fns:
                 if os.path.getsize(os.path.join(ddir, fn)) == 0:
                     continue
                 if fn.endswith('.rar') or fn.endswith('.RAR'):
-                    print fn
+                    print 'Un-rar [{0}] => {1}'.format(stid, fn)
+                    stk7dir = os.path.join(k7dir, stid, t.strftime('%Y%m'))
+                    if not os.path.isdir(stk7dir):
+                        os.makedirs(stk7dir)
                     spdata.unrar(os.path.join(ddir, fn), stk7dir)
 
-        print 'Finish...'
+        print 'Un-rar Done!'
 
     def __merge(self, year, month, day):
         """decoding the k7 files and merge all of k7 files in specific date range into a single k7 file
@@ -107,6 +137,8 @@ class AodProcess:
         -------
 
         """
+        print 'Merge...'
+
         k7dir = self.aodSetting.k7_dir  # path.join(baseDir, 'k7')
         mdir = self.aodSetting.merge_dir  # path.join(baseDir, 'merge')
         t = datetime.datetime(year, month, day)
@@ -115,7 +147,6 @@ class AodProcess:
 
         # Loop - merge k7 files for each station
         for stid in stids:
-            print stid
             stk7dir = path.join(k7dir, stid, t.strftime('%Y%m'))
             if not path.isdir(stk7dir):
                 continue
@@ -127,17 +158,19 @@ class AodProcess:
             # check k7 and remove it if empty file
             for fn in fns:
                 if path.getsize(fn) == 0:
-                    print fn
+                    print 'Empty K7 [{0}] => {1} '.format(stid, fn)
                     fns.remove(fn)
 
             stmdir = path.join(mdir, stid)
             if not os.path.exists(stmdir):
                 os.makedirs(stmdir)
+
             outfn = path.join(stmdir, stid + '_' +
                               t.strftime('%Y%m') + '_merge.k7')
             spdata.merge_files(fns, outfn)
+            print 'Merge [{0}] => {1}'.format(stid, outfn)
 
-        print 'Finish...'
+        print 'Merge Done!'
 
     def __cal_aod(self, year, month, day):
         """calculate the aod file
@@ -152,21 +185,17 @@ class AodProcess:
         Returns
         -------
 
-        """   # date stamp
+        """
+        print 'Calculate...'
+
         t = datetime.datetime(year, month, day)
 
-        ddir = self.aodSetting.data_dir  # os.path.join(datadir, 'data')
-        # r'D:\Working\Projects\SunPhotometer\Sunphotometer\Aot'
+        ddir = self.aodSetting.data_dir
         wdir = self.aodSetting.p_aot_dir
-        #wdir = r'D:\MyProgram\VB.Net\AOPView\bin\Debug\Aot'
         ascdir = self.aodSetting.ascii_dir
-        if not path.exists(ascdir):
-            os.makedirs(ascdir)
         aotdir = self.aodSetting.aot_dir
-        if not path.exists(aotdir):
-            os.makedirs(aotdir)
 
-        stations = self.aodSetting.stations  # Stations().read(stfn)
+        stations = self.aodSetting.stations
 
         # Calculate AOD
         print 'Calculate AOD...'
@@ -179,32 +208,55 @@ class AodProcess:
                              t.strftime("%Y%m") + "_merge.K7")
             if not os.path.exists(k7fn):
                 continue
-            print station
-            nsufn = path.join(ascdir, fn, fn + "_" +
+            print '[{0}]: Ready'.format(fn)
+            nsu_dir = path.join(ascdir, fn)
+            nsufn = path.join(nsu_dir, fn + "_" +
                               t.strftime("%Y%m") + '.NSU')
             if not os.path.exists(nsufn):
-                print 'Output nsu file...'
+                if not os.path.exists(nsu_dir):
+                    os.makedirs(nsu_dir)
                 rr = spdata.decode(k7fn)
                 r = spdata.extract(rr, 'NSU')
                 spdata.save(r, nsufn)
+                print '[{0}]: Output nsu file'.format(fn)
 
-            exefn = path.join(wdir, 'ESPESOR.EXE')
-            inputfn = path.join(wdir, 'inputpar.dat')
-            ozonefn = path.join(wdir, 'ozono.dat')
-            # calfn = path.join("D:\Working\Projects\SunPhotometer\Sunphotometer", "CalFile",'calibr746.cal')
+            # check if the external program and the parameter files are ready
+            validated = True
+            exefn = self.aodSetting.p_aot_exe
+            if not os.path.exists(exefn):
+                print '[{0}]: Not Found Aot program, {1}'.format(fn, exefn)
+                validated = False
+
+            inputfn = self.aodSetting.p_aot_input
+            if not os.path.exists(inputfn):
+                print '[{0}]: Not Found input parameter data, {1}'.format(fn, inputfn)
+                validated = False
+
+            ozonefn = self.aodSetting.p_aot_ozone
+            if not os.path.exists(ozonefn):
+                print '[{0}]: Not Found ozone data, {1}'.format(fn, ozonefn)
+                validated = False
+
             calfn = path.join(self.aodSetting.p_cal_dir,
                               "calibr" + station.calibr + ".cal")
-            taofn = path.join(aotdir, fn, fn + "_" +
-                              t.strftime("%Y%m") + '.tao')
-            lat = station.lat  # 28.90  # 41.76
-            lon = station.lon  # 121.63  # 123.41
-            alt = station.alt  # 91.5  # 110
+            if not os.path.exists(calfn):
+                print '[{0}]: Not Found calculation paramter data, {1}'.format(fn, calfn)
+                validated = False
 
-            print "wdir: " + wdir
-            print "calfn: " + calfn
-            print "taofn: " + taofn
-            print "nsufn: " + nsufn
+            if validated:
+                tao_dir = path.join(aotdir, fn)
+                if not os.path.exists(tao_dir):
+                    os.makedirs(tao_dir)
+                taofn = path.join(tao_dir, fn + "_" +
+                                  t.strftime("%Y%m") + '.tao')
+                lat = station.lat
+                lon = station.lon
+                alt = station.alt
 
-            spdata.cal_aot(wdir, calfn, taofn, nsufn, lat, lon, alt, alpha=1)
+                spdata.cal_aot(wdir, calfn, taofn, nsufn,
+                               lat, lon, alt, alpha=1)
+                print '[{0}] => {1}'.format(fn, taofn)
+            else:
+                print '[{0}]: Abort'.format(fn)
 
-        print 'Done!'
+        print 'Calculate Done!'

@@ -1,3 +1,8 @@
+"""
+class AodSetting
+"""
+
+import os
 import os.path as path
 from stations import Station, Stations
 
@@ -33,5 +38,33 @@ class AodSetting:
         self.stations_file = path.join(self.data_dir, "stations_aod.csv")
         self.p_aot_dir = path.join(self.para_dir, "Aot")
         self.p_cal_dir = path.join(self.para_dir, "CalFile")
+        self.p_aot_exe=path.join(self.p_aot_dir,"ESPESOR.EXE")
+        self.p_aot_input=path.join(self.p_aot_dir,"inputpar.dat")
+        self.p_aot_ozone=path.join(self.p_aot_dir,"ozono.dat")
+        
+        # init dirs
+        
+        # init data dirs
+        if not path.exists(self.data_dir):
+            os.makedirs(self.data_dir)
+        if not path.exists(self.dd_dir):
+            os.makedirs(self.dd_dir)
+        if not path.exists(self.k7_dir):
+            os.makedirs(self.k7_dir)
+        if not path.exists(self.merge_dir):
+            os.makedirs(self.merge_dir)
+        if not path.exists(self.ascii_dir):
+            os.makedirs(self.ascii_dir)
+        if not path.exists(self.aot_dir):
+            os.makedirs(self.aot_dir)
+
+        # init parameter data dirs
+        if not path.exists(self.para_dir):
+            os.makedirs(self.para_dir)
+        if not path.exists(self.p_aot_dir):
+            os.makedirs(self.p_aot_dir)
+        if not path.exists(self.p_cal_dir):
+            os.makedirs(self.p_cal_dir)
+
         # Read stations from file
         self.stations = Stations().read(self.stations_file)
