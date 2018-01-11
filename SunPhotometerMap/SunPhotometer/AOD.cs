@@ -115,7 +115,7 @@ namespace SunPhotometer
 
         protected AODConfig()
         {
-            this.AODBaseDirectory = @"D:\Working\Projects\SunPhotometer\data\AOD\aot\";
+            this.AODBaseDirectory = @"D:\Working\Projects\SunPhotometer\data\AOD\aod\";
             this.Encoding = Encoding.UTF8;
 
             string configFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "aodconfig.json");

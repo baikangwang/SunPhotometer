@@ -58,6 +58,7 @@
     <Compile Include="HTTPService\ServiceBase.cs" />
     <Compile Include="LoadMapMode.cs" />
     <Compile Include="MapMode.cs" />
+    <Compile Include="MapStyle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\BMap.Designer.cs">
       <AutoGen>True</AutoGen>

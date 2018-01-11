@@ -331,6 +331,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="BaiduJSAPI_cracker.js" />
+    <None Include="Resources\icon_station.png" />
     <None Include="packages.config" />
     <None Include="Resources\ico_bysubway.png" />
     <None Include="Resources\ico_bybus.png" />

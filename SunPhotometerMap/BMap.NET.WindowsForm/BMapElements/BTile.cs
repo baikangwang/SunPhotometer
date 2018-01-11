@@ -13,7 +13,7 @@ namespace BMap.NET.WindowsForm.BMapElements
     /// <summary>
     /// 地图瓦片
     /// </summary>
-    class BTile:BMapElement
+    internal class BTile : BMapElement
     {
         static BTile()
         {
@@ -22,6 +22,7 @@ namespace BMap.NET.WindowsForm.BMapElements
             ThreadPool.GetMinThreads(out minWorker, out minIOC);
             ThreadPool.SetMinThreads(100, minIOC);
         }
+
         /// <summary>
         /// 瓦片X坐标
         /// </summary>
@@ -30,6 +31,7 @@ namespace BMap.NET.WindowsForm.BMapElements
             get;
             set;
         }
+
         /// <summary>
         /// 瓦片Y坐标
         /// </summary>
@@ -38,6 +40,7 @@ namespace BMap.NET.WindowsForm.BMapElements
             get;
             set;
         }
+
         /// <summary>
         /// 当前地图缩放级别
         /// </summary>
@@ -46,6 +49,7 @@ namespace BMap.NET.WindowsForm.BMapElements
             set;
             get;
         }
+
         /// <summary>
         /// 当前所在地图控件
         /// </summary>
@@ -56,6 +60,7 @@ namespace BMap.NET.WindowsForm.BMapElements
         }
 
         private MapMode _mode;
+
         /// <summary>
         /// 地图模式
         /// </summary>
@@ -74,7 +79,20 @@ namespace BMap.NET.WindowsForm.BMapElements
                 }
             }
         }
+
         private LoadMapMode _loadMode;
+
+        /// <summary>
+        /// 地图样式
+        /// </summary>
+        public MapStyle MapStyle
+        {
+            get { return _mapStyle; }
+            set { _mapStyle = value; }
+        }
+
+        private MapStyle _mapStyle = MapStyle.normal;
+
         /// <summary>
         /// 瓦片加载模式
         /// </summary>
@@ -114,7 +132,8 @@ namespace BMap.NET.WindowsForm.BMapElements
         /// <param name="parent"></param>
         /// <param name="mode"></param>
         /// <param name="loadmode"></param>
-        public BTile(int x, int y, int z, Control parent, MapMode mode,LoadMapMode loadmode)
+        /// <param name="mapStyle"></param>
+        public BTile(int x, int y, int z, Control parent, MapMode mode, LoadMapMode loadmode, MapStyle mapStyle)
         {
             X = x;
             Y = y;
@@ -122,7 +141,9 @@ namespace BMap.NET.WindowsForm.BMapElements
             BMapControl = parent;
             Mode = mode;
             LoadMode = loadmode;
+            this.MapStyle = mapStyle;
         }
+
         /// <summary>
         /// 绘制
         /// </summary>
@@ -148,101 +169,96 @@ namespace BMap.NET.WindowsForm.BMapElements
             {
                 _loading = true;
                 if (!_load_error)
-                    ((Action)(delegate()
+                    ((Action)(delegate ()
                     {
                         MapService ms = new MapService();
-                        _normal = ms.LoadMapTile(X, Y, Zoom, Mode, LoadMode);
+                        _normal = ms.LoadMapTile(X, Y, Zoom, Mode, LoadMode, this.MapStyle);
                         _loading = false;
                         if (_normal == null)
                         {
                             _load_error = true;
                         }
-                        BMapControl.Invoke((Action)delegate()
+                        BMapControl.Invoke((Action)delegate ()
                         {
                             BMapControl.Invalidate();
                         });
-
                     })).BeginInvoke(null, null);
             }
             if (Mode == MapMode.RoadNet && _road_net == null && !_loading)  //开始下载道路网瓦片
             {
                 _loading = true;
                 if (!_load_error)
-                ((Action)(delegate()
-                {
-                    MapService ms = new MapService();
-                    _road_net = ms.LoadMapTile(X, Y, Zoom, Mode, LoadMode);
-                    _loading = false;
-                    if (_road_net == null)
+                    ((Action)(delegate ()
                     {
-                        _load_error = true;
-                    }
-                    BMapControl.Invoke((Action)delegate()
-                    {
-                        BMapControl.Invalidate();
-                    });
-
-                })).BeginInvoke(null, null);
+                        MapService ms = new MapService();
+                        _road_net = ms.LoadMapTile(X, Y, Zoom, Mode, LoadMode);
+                        _loading = false;
+                        if (_road_net == null)
+                        {
+                            _load_error = true;
+                        }
+                        BMapControl.Invoke((Action)delegate ()
+                        {
+                            BMapControl.Invalidate();
+                        });
+                    })).BeginInvoke(null, null);
             }
             if (Mode == MapMode.Satellite && _sate == null && !_loading)  //开始下载卫星图瓦片
             {
                 _loading = true;
                 if (!_load_error)
-                ((Action)(delegate()
-                {
-                    MapService ms = new MapService();
-                    _sate = ms.LoadMapTile(X, Y, Zoom, Mode, LoadMode);
-                    _loading = false;
-                    if (_sate == null)
+                    ((Action)(delegate ()
                     {
-                        _load_error = true;
-                    }
-                    BMapControl.Invoke((Action)delegate()
-                    {
-                        BMapControl.Invalidate();
-                    });
-
-                })).BeginInvoke(null, null);
+                        MapService ms = new MapService();
+                        _sate = ms.LoadMapTile(X, Y, Zoom, Mode, LoadMode);
+                        _loading = false;
+                        if (_sate == null)
+                        {
+                            _load_error = true;
+                        }
+                        BMapControl.Invoke((Action)delegate ()
+                        {
+                            BMapControl.Invalidate();
+                        });
+                    })).BeginInvoke(null, null);
             }
             if (Mode == MapMode.Sate_RoadNet && _sate == null && !_loading)  //开始下载卫星图瓦片
             {
                 _loading = true;
                 if (!_load_error)
-                ((Action)(delegate()
-                {
-                    MapService ms = new MapService();
-                    _sate = ms.LoadMapTile(X, Y, Zoom, MapMode.Satellite, LoadMode);
-                    _loading = false;
-                    if (_sate == null)
+                    ((Action)(delegate ()
                     {
-                        _load_error = true;
-                    }
-                    BMapControl.Invoke((Action)delegate()
-                    {
-                        BMapControl.Invalidate();
-                    });
-
-                })).BeginInvoke(null, null);
+                        MapService ms = new MapService();
+                        _sate = ms.LoadMapTile(X, Y, Zoom, MapMode.Satellite, LoadMode);
+                        _loading = false;
+                        if (_sate == null)
+                        {
+                            _load_error = true;
+                        }
+                        BMapControl.Invoke((Action)delegate ()
+                        {
+                            BMapControl.Invalidate();
+                        });
+                    })).BeginInvoke(null, null);
             }
             if (Mode == MapMode.Sate_RoadNet && _road_net == null && !_loading) //开始下载道路网瓦片
             {
                 _loading = true;
                 if (!_load_error)
-                ((Action)(delegate()
-                {
-                    MapService ms = new MapService();
-                    _road_net = ms.LoadMapTile(X, Y, Zoom, MapMode.RoadNet, LoadMode);
-                    _loading = false;
-                    if (_road_net == null)
+                    ((Action)(delegate ()
                     {
-                        _load_error = true;
-                    }
-                    BMapControl.Invoke((Action)delegate()
-                    {
-                        BMapControl.Invalidate();
-                    });
-
-                })).BeginInvoke(null, null);
+                        MapService ms = new MapService();
+                        _road_net = ms.LoadMapTile(X, Y, Zoom, MapMode.RoadNet, LoadMode);
+                        _loading = false;
+                        if (_road_net == null)
+                        {
+                            _load_error = true;
+                        }
+                        BMapControl.Invoke((Action)delegate ()
+                        {
+                            BMapControl.Invalidate();
+                        });
+                    })).BeginInvoke(null, null);
             }
 
             string error = "正在加载图片...";
@@ -314,7 +330,7 @@ namespace BMap.NET.WindowsForm.BMapElements
                     //先绘制卫星图  再绘制道路网
                     if (_sate != null)
                         g.DrawImage(_sate, new RectangleF(p, new SizeF(256, 256)));
-                    if(_road_net != null)
+                    if (_road_net != null)
                         g.DrawImage(_road_net, new RectangleF(p, new SizeF(256, 256)));
                 }
             }

@@ -193,8 +193,33 @@ namespace BMap.NET.WindowsForm
 
         private bool _enableMapInfo = true;
 
+        /// <summary>
+        /// 地图应用场景，默认地理图
+        /// </summary>
+        public MapStage MapStage { get { return _mapStage; } set { _mapStage = value; } }
+
+        private MapStage _mapStage = MapStage.Normal;
+
+        /// <summary>
+        /// 地图样式，默认Baidu地图经典样式
+        /// </summary>
         public MapStyle MapStyle { get { return _mapStyle; } set { _mapStyle = value; } }
-        private MapStyle _mapStyle = MapStyle.Normal;
+
+        private MapStyle _mapStyle = MapStyle.normal;
+
+        /// <summary>
+        /// The maximum of Zoom
+        /// </summary>
+        public int MaxZoom { get { return _max_zoom; } set { _max_zoom = value; } }
+
+        private int _max_zoom = 19;
+
+        /// <summary>
+        /// The minmum of Zoom
+        /// </summary>
+        public int MinZoom { get { return _min_zoom; } set { _min_zoom = value; } }
+
+        private int _min_zoom = 3;
 
         #endregion 属性
 
@@ -742,7 +767,7 @@ namespace BMap.NET.WindowsForm
                             _current_selected_marker = p.Value;
                             //显示标记信息控件
                             Point point = MapHelper.GetScreenLocationByLatLng(p.Value.Location, _center, _zoom, ClientSize);
-                            if (this.MapStyle == MapStyle.Normal)
+                            if (this.MapStage == MapStage.Normal)
                             {
                                 _bMarkerTipControl.Deleted = false;
                                 _bMarkerTipControl.Edited = false;
@@ -1152,7 +1177,7 @@ namespace BMap.NET.WindowsForm
             if (!this.EnableScaleMap) return;
             //缩放
             int z = _zoom + e.Delta / 100;
-            if (z >= 3 && z <= 19)
+            if (z >= _min_zoom && z <= _max_zoom)
             {
                 LatLngPoint p = MapHelper.GetLatLngByScreenLocation(e.Location, _center, _zoom, ClientSize);  //鼠标经纬度坐标
                 PointF pt = MapHelper.GetLocationByLatLng(p, z);  //鼠标像素坐标
@@ -1403,7 +1428,7 @@ namespace BMap.NET.WindowsForm
                 {
                     if (!_tiles.ContainsKey(_zoom + "_" + i + "_" + j))
                     {
-                        _tiles.Add(_zoom + "_" + i + "_" + j, new BTile(i, j, _zoom, this, _mode, _loadmode));
+                        _tiles.Add(_zoom + "_" + i + "_" + j, new BTile(i, j, _zoom, this, _mode, _loadmode, this._mapStyle));
                     }
                 }
             }
@@ -1717,7 +1742,8 @@ namespace BMap.NET.WindowsForm
                 Name = name,
                 Remarks = "我的备注",
                 Selected = false,
-                Address = address
+                Address = address,
+                MapStage = this.MapStage
             };
             _markers.Add(marker.Index.ToString(), marker);
         }
@@ -2547,9 +2573,16 @@ namespace BMap.NET.WindowsForm
         DrawPolygon  //绘制多边形
     }
 
-    public enum MapStyle
+    public enum MapStage
     {
+        /// <summary>
+        /// 地理图
+        /// </summary>
         Normal,
+
+        /// <summary>
+        /// 气象站图
+        /// </summary>
         Station
     }
 }

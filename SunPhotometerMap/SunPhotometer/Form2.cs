@@ -18,16 +18,19 @@ namespace SunPhotometer
         {
             InitializeComponent();
             BMapConfiguration.SK = "GMqDruxjOz2PkfMlNKmDlscc";
-            BMapConfiguration.LoadMapMode = LoadMapMode.Cache;
+            BMapConfiguration.LoadMapMode = LoadMapMode.CacheServer;
             BMapConfiguration.VerificationMode = VerificationMode.IPWhiteList;
             BMapConfiguration.MapCachePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "cache");
             this.bMap.Zoom = 5;
             this.bMap.EnableCity = false;
-            this.bMap.EnableScaleMap = false;
+            this.bMap.EnableScaleMap = true;
+            this.bMap.MaxZoom = 7;
+            this.bMap.MinZoom = 5;
             this.bMap.EnableDragMap = false;
             this.bMap.EnableMapInfo = false;
             this.bMap.EnableToolsBar = false;
-            this.bMap.MapStyle = MapStyle.Station;
+            this.bMap.MapStage = MapStage.Station;
+            this.bMap.MapStyle = MapStyle.hardedge;
             this.bMap.StationVisibleChanged += BMap_StationVisibleChanged;
         }
 
@@ -38,9 +41,9 @@ namespace SunPhotometer
             string csvfile = @"D:\Working\Projects\SunPhotometer\data\AOD\stations_aod.csv";
 
             var stations = Stations.Read(csvfile);
-            var station = stations.FirstOrDefault(s => s.StationId == "54662");
+            var station = stations.FirstOrDefault(s => s.StationId == "54102");
 
-            var aod = new AOD(station, "200901");
+            var aod = new AOD(station, "201801");
             return aod.ToDataTable();
         }
 
@@ -64,7 +67,7 @@ namespace SunPhotometer
             if (btZoom.Text == "+")
             {
                 btZoom.Text = "-";
-                this.bMap.Zoom = 6;
+                this.bMap.Zoom = 7;
             }
             else
             {
@@ -80,7 +83,7 @@ namespace SunPhotometer
 
         private void ckbStyle_CheckedChanged(object sender, EventArgs e)
         {
-            this.bMap.MapStyle = ckbStyle.Checked ? MapStyle.Station : MapStyle.Normal;
+            this.bMap.MapStage = ckbStyle.Checked ? MapStage.Station : MapStage.Normal;
         }
 
         #endregion event handling methods

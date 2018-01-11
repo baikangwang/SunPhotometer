@@ -52,7 +52,7 @@
             this.bMap.EnableToolsBar = false;
             this.bMap.LoadMode = BMap.NET.LoadMapMode.CacheServer;
             this.bMap.Location = new System.Drawing.Point(3, 18);
-            this.bMap.MapStyle = BMap.NET.WindowsForm.MapStyle.Normal;
+            this.bMap.MapStage = BMap.NET.WindowsForm.MapStage.Normal;
             this.bMap.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.bMap.Mode = BMap.NET.MapMode.Normal;
             this.bMap.Name = "bMap";
