@@ -19,6 +19,6 @@ process = AodProcess(aod_setting)
 
 # run
 date = datetime.datetime.today()
-# process.run(date.year,date.month,date.day,3)
-# process.run(date.year,date.month,date.day,4)
-process.run()
+# process.run_dev(date.year,date.month,date.day,3)
+# process.run_dev(date.year,date.month,date.day,4)
+process.run(date.year, date.month, date.day)

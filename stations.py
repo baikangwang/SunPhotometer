@@ -92,8 +92,8 @@ class Stations:
         """
         return self.__stations.get(stId)
 
-    def getstNames(self):
-        """gets a list of station names.
+    def getstIds(self):
+        """gets a list of station ids.
 
         Parameters
         ----------
@@ -102,6 +102,35 @@ class Stations:
         Returns
         -------
         list
-            a list of name strings
+            a list of station Id strings
         """
         return self.__stations.keys()
+
+    def getstNames(self):
+        """gets a list of station names.
+
+        Parameters
+        ----------
+        self: 
+
+        Returns
+        -------
+        list
+            a list of station name strings
+
+        """
+        return [self.__stations[key].stname for key in self.__stations.keys()]
+
+    def tolist(self):
+        """gets a list of station objects.
+
+        Parameters
+        ----------
+        self: 
+
+        Returns
+        -------
+        list
+            a list of station object instances
+        """
+        return self.__stations.values()

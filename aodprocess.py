@@ -40,7 +40,7 @@ class AodProcess:
 
         self.__cal_aod(year, month, day)
 
-    def run(self, year, month, day, step=1):
+    def run_dev(self, year, month, day, step):
         """run step by step for dev testing
 
         Parameters
@@ -81,7 +81,7 @@ class AodProcess:
         """
         print 'Download...'
         t = datetime.datetime(year, month, day)
-        spdata.download(stime=t, ftp_dir=self.aodSetting.ftp_root, data_dir=self.aodSetting.dd_dir, ftp_ip=self.aodSetting.ftp_ip,
+        spdata.download(stime=t, stations=self.aodSetting.stations, ftp_dir=self.aodSetting.ftp_root, data_dir=self.aodSetting.dd_dir, ftp_ip=self.aodSetting.ftp_ip,
                         user=self.aodSetting.ftp_user, pword=self.aodSetting.ftp_psw)
         print 'Download Done!'
 
@@ -102,21 +102,24 @@ class AodProcess:
         print 'Un-rar...'
         k7dir = self.aodSetting.k7_dir
         t = datetime.datetime(year, month, day)
-        ddir = os.path.join(self.aodSetting.dd_dir, t.strftime('%Y%m'))
-        if not os.path.exists(ddir):
-            raise IOError
-
-        stids = self.aodSetting.stations.getstNames()
+        stids = self.aodSetting.stations.getstIds()
 
         # Loop - unrar files for each station
         for stid in stids:
-            fns = glob.glob(os.path.join(ddir, '*' + stid + '*.rar'))
+            ddir = os.path.join(self.aodSetting.dd_dir, stid,
+                                t.strftime('%Y%m'))
+            if not os.path.exists(ddir):
+                # print '{0} not exists'.format(ddir)
+                continue
+            fns = glob.glob(os.path.join(ddir, '*' + stid +
+                                         '*' + t.strftime('%Y%m%d') + '*' + '*.rar'))
             for fn in fns:
                 if os.path.getsize(os.path.join(ddir, fn)) == 0:
                     continue
                 if fn.endswith('.rar') or fn.endswith('.RAR'):
                     print 'Un-rar [{0}] => {1}'.format(stid, fn)
-                    stk7dir = os.path.join(k7dir, stid, t.strftime('%Y%m'))
+                    stk7dir = os.path.join(
+                        k7dir, stid, t.strftime('%Y%m'), t.strftime('%d'))
                     if not os.path.isdir(stk7dir):
                         os.makedirs(stk7dir)
                     spdata.unrar(os.path.join(ddir, fn), stk7dir)
@@ -143,11 +146,12 @@ class AodProcess:
         mdir = self.aodSetting.merge_dir  # path.join(baseDir, 'merge')
         t = datetime.datetime(year, month, day)
 
-        stids = self.aodSetting.stations.getstNames()
+        stids = self.aodSetting.stations.getstIds()
 
         # Loop - merge k7 files for each station
         for stid in stids:
-            stk7dir = path.join(k7dir, stid, t.strftime('%Y%m'))
+            stk7dir = path.join(
+                k7dir, stid, t.strftime('%Y%m'), t.strftime('%d'))
             if not path.isdir(stk7dir):
                 continue
 
@@ -161,12 +165,12 @@ class AodProcess:
                     print 'Empty K7 [{0}] => {1} '.format(stid, fn)
                     fns.remove(fn)
 
-            stmdir = path.join(mdir, stid)
+            stmdir = path.join(mdir, stid, t.strftime('%Y%m'))
             if not os.path.exists(stmdir):
                 os.makedirs(stmdir)
 
             outfn = path.join(stmdir, stid + '_' +
-                              t.strftime('%Y%m') + '_merge.k7')
+                              t.strftime('%Y%m%d') + '_merge.k7')
             spdata.merge_files(fns, outfn)
             print 'Merge [{0}] => {1}'.format(stid, outfn)
 
@@ -200,18 +204,18 @@ class AodProcess:
         # Calculate AOD
         print 'Calculate AOD...'
 
-        for stname in stations.getstNames():
+        for stId in stations.getstIds():
             # fn = '54662'
-            station = stations.get(stname)
+            station = stations.get(stId)
             fn = station.stId
-            k7fn = path.join(self.aodSetting.merge_dir, fn, fn + "_" +
-                             t.strftime("%Y%m") + "_merge.K7")
+            k7fn = path.join(self.aodSetting.merge_dir, fn, t.strftime('%Y%m'), fn + "_" +
+                             t.strftime("%Y%m%d") + "_merge.K7")
             if not os.path.exists(k7fn):
                 continue
             print '[{0}]: Ready'.format(fn)
-            nsu_dir = path.join(ascdir, fn)
+            nsu_dir = path.join(ascdir, fn, t.strftime('%Y%m'))
             nsufn = path.join(nsu_dir, fn + "_" +
-                              t.strftime("%Y%m") + '.NSU')
+                              t.strftime("%Y%m%d") + '.NSU')
             if not os.path.exists(nsufn):
                 if not os.path.exists(nsu_dir):
                     os.makedirs(nsu_dir)
@@ -244,11 +248,11 @@ class AodProcess:
                 validated = False
 
             if validated:
-                tao_dir = path.join(aotdir, fn)
+                tao_dir = path.join(aotdir, fn, t.strftime('%Y%m'))
                 if not os.path.exists(tao_dir):
                     os.makedirs(tao_dir)
                 taofn = path.join(tao_dir, fn + "_" +
-                                  t.strftime("%Y%m") + '.tao')
+                                  t.strftime("%Y%m%d") + '.tao')
                 lat = station.lat
                 lon = station.lon
                 alt = station.alt
