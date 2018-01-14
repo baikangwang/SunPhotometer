@@ -30,6 +30,7 @@ def download(stime, etime=None, stations=None, ftp_dir='/data2/cawas', data_dir=
     # Login ftp
     print 'Login ftp host...'
     ftp = FTP(ftp_ip)
+    ftp.encoding = 'utf-8'
     ftp.login(user, pword)
     # ftp=FTP()
     # ftp.connect(ftp_ip,21)
@@ -39,8 +40,8 @@ def download(stime, etime=None, stations=None, ftp_dir='/data2/cawas', data_dir=
     # Download the data
     print 'Start download data...'
     if stations is None:
-        host_dir = ftp_dir + '/' + stime.strftime('%Y%m')
         try:
+            host_dir = '{0}/{1}'.format(ftp_dir, stime.strftime('%Y%m'))
             ftp.cwd(host_dir)
             print host_dir
         except:
@@ -62,8 +63,9 @@ def download(stime, etime=None, stations=None, ftp_dir='/data2/cawas', data_dir=
                     os.path.join(local_dir, name), 'wb').write)
     else:
         for st in stations.tolist():
-            host_dir = ftp_dir + '/' + st.stname + '/' + stime.strftime('%Y%m')
             try:
+                host_dir = '{0}/{1}/{2}'.format(ftp_dir,
+                                                st.stname,  stime.strftime('%Y%m'))
                 ftp.cwd(host_dir)
                 print host_dir
             except:

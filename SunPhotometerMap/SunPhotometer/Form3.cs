@@ -36,7 +36,7 @@ namespace SunPhotometer
             var stations = Stations.Read(csvfile);
             var station = stations.FirstOrDefault(s => s.StationId == "54662");
 
-            var aod = new AOD(station, "200901");
+            var aod = new AOD(station, DateTime.Now);
 
             #region solution 1
 

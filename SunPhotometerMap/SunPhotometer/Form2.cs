@@ -38,12 +38,10 @@ namespace SunPhotometer
 
         private object BMap_StationVisibleChanged(object sender, EventArgs e)
         {
-            string csvfile = @"D:\Working\Projects\SunPhotometer\data\AOD\stations_aod.csv";
-
-            var stations = Stations.Read(csvfile);
+            var stations = App.Current.Stations;
             var station = stations.FirstOrDefault(s => s.StationId == "54102");
 
-            var aod = new AOD(station, "201801");
+            var aod = new AOD(station, DateTime.Now);
             return aod.ToDataTable();
         }
 
@@ -53,9 +51,7 @@ namespace SunPhotometer
             this.ckbDrag.Checked = false;
             this.ckbStyle.Checked = false;
 
-            string csvfile = @"D:\Working\Projects\SunPhotometer\data\AOD\stations_aod.csv";
-
-            foreach (var station in Stations.Read(csvfile))
+            foreach (var station in App.Current.Stations)
             {
                 this.bMap.AddMarks(new BMap.NET.WindowsForm.LatLngPoint(station.Lontitude, station.Latitude),
                     station.Name, station.Name);

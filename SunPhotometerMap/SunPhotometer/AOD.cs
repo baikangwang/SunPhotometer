@@ -14,7 +14,7 @@ namespace SunPhotometer
     {
         public Station Station { get; private set; }
 
-        public string DateStamp { get; private set; }
+        public DateTime DateStamp { get; private set; }
 
         protected AODConfig AODConfig = AODConfig.Singleton;
 
@@ -27,7 +27,7 @@ namespace SunPhotometer
         /// </summary>
         public List<AODField> Headers { get; private set; }
 
-        public AOD(Station station, string dateStamp)
+        public AOD(Station station, DateTime dateStamp)
         {
             this.Station = station;
             this.DateStamp = dateStamp;
@@ -36,11 +36,11 @@ namespace SunPhotometer
             this.Load(this.DateStamp);
         }
 
-        private void Load(string timeStamp)
+        private void Load(DateTime timeStamp)
         {
-            string dataDir = AODConfig.AODBaseDirectory;
-            string file = Path.Combine(dataDir, Station.StationId, string.Format("{0}_{1}.ta2", Station.StationId, timeStamp));
-            using (StreamReader sr = new StreamReader(file, AODConfig.Encoding))
+            string dataDir = App.Current.AodDir;
+            string file = Path.Combine(dataDir, Station.StationId, timeStamp.ToString("yyyyMM"), string.Format("{0}_{1}.ta2", Station.StationId, timeStamp.ToString("yyyyMMdd")));
+            using (StreamReader sr = new StreamReader(file, App.Current.Encoding))
             {
                 bool headerRead = false;
                 while (!sr.EndOfStream)
@@ -99,10 +99,6 @@ namespace SunPhotometer
     {
         public List<AODField> Fields { get; }
 
-        public string AODBaseDirectory { get; }
-
-        public Encoding Encoding { get; }
-
         public static AODConfig _singleton = new AODConfig();
 
         public static AODConfig Singleton
@@ -115,9 +111,6 @@ namespace SunPhotometer
 
         protected AODConfig()
         {
-            this.AODBaseDirectory = @"D:\Working\Projects\SunPhotometer\data\AOD\aod\";
-            this.Encoding = Encoding.UTF8;
-
             string configFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "aodconfig.json");
             if (!File.Exists(configFile)) throw new Exception("NOT Found AodConfig");
             var content = File.ReadAllText(configFile, Encoding.UTF8);
