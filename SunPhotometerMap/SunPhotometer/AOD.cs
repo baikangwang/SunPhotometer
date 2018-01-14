@@ -20,6 +20,8 @@ namespace SunPhotometer
 
         public List<object[]> DataRows { get; private set; }
 
+        public bool HasData { get { return DataRows.Count > 0; } }
+
         /// <summary>
         /// The columns
         /// TKey: the column name
@@ -38,51 +40,71 @@ namespace SunPhotometer
 
         private void Load(DateTime timeStamp)
         {
-            string dataDir = App.Current.AodDir;
-            string file = Path.Combine(dataDir, Station.StationId, timeStamp.ToString("yyyyMM"), string.Format("{0}_{1}.ta2", Station.StationId, timeStamp.ToString("yyyyMMdd")));
-            using (StreamReader sr = new StreamReader(file, App.Current.Encoding))
+            string dataDir = Path.Combine(App.Current.AodDir, Station.StationId, timeStamp.ToString("yyyyMM")) ;
+            if (!Directory.Exists(dataDir)) return;
+
+            string[] files = Directory.GetFiles(dataDir, "*.ta2", SearchOption.TopDirectoryOnly);
+            
+            if (files.Length == 0) return;
+
+            bool headerRead = false;
+            int lineNo = 0;
+            foreach (string file in files)
             {
-                bool headerRead = false;
-                while (!sr.EndOfStream)
+                if (!File.Exists(file)) continue;
+                lineNo = 0;
+                using (StreamReader sr = new StreamReader(file, App.Current.Encoding))
                 {
-                    string line = sr.ReadLine();
-                    // split the data row with the whitespaces separator, and ignore the empty value
-                    var arrValues = Regex.Split(line, @"\s+", RegexOptions.Singleline).Where(u => !string.IsNullOrEmpty(u)).ToArray();
-                    // header
-                    if (!headerRead)
+                    while (!sr.EndOfStream)
                     {
-                        foreach (var field in AODConfig.Fields)
+                        string line = sr.ReadLine();
+                        // split the data row with the whitespaces separator, and ignore the empty value
+                        var arrValues = Regex.Split(line, @"\s+", RegexOptions.Singleline).Where(u => !string.IsNullOrEmpty(u)).ToArray();
+                        // header
+                        if (lineNo==0 &&!headerRead)
                         {
-                            // the first row is the header line
-                            // the last column should be ignore
-                            for (int i = 0; i < arrValues.Length - 1; i++)
+                            foreach (var field in AODConfig.Fields)
                             {
-                                string strHeader = arrValues[i];
-                                if (Regex.IsMatch(strHeader, field.RawName, RegexOptions.IgnoreCase | RegexOptions.Compiled))
+                                // the first row is the header line
+                                // the last column should be ignore
+                                for (int i = 0; i < arrValues.Length - 1; i++)
                                 {
-                                    // consider Index as the column index of raw data here
-                                    this.Headers.Add(new AODField(strHeader, field.LabelName, i, field.Visible, field.DataType));
-                                    break;
+                                    string strHeader = arrValues[i];
+                                    if (Regex.IsMatch(strHeader, field.RawName, RegexOptions.IgnoreCase | RegexOptions.Compiled))
+                                    {
+                                        // consider Index as the column index of raw data here
+                                        this.Headers.Add(new AODField(strHeader, field.LabelName, i, field.Visible, field.DataType));
+                                        break;
+                                    }
                                 }
                             }
+
+                            headerRead = true;
+                            lineNo++;
+                            continue;
+                        }
+                        else if(lineNo == 0)
+                        {
+                            // skip the header line
+                            lineNo++;
+                            continue;
                         }
 
-                        headerRead = true;
-                        continue;
-                    }
-                    object[] values = new object[this.Headers.Count];
-                    for (int i = 0; i < this.Headers.Count; i++)
-                    {
-                        var header = Headers[i];
+                        object[] values = new object[this.Headers.Count];
+                        for (int i = 0; i < this.Headers.Count; i++)
+                        {
+                            var header = Headers[i];
 
-                        values[i] = Convert.ChangeType(arrValues[header.Index], header.DataType);
+                            values[i] = Convert.ChangeType(arrValues[header.Index], header.DataType);
+                        }
+                        DataRows.Add(values);
+                        lineNo++;
                     }
-                    DataRows.Add(values);
                 }
             }
         }
 
-        public DataTable ToDataTable()
+        public DataView ToDataTable()
         {
             var table = new DataTable("AOD");
             foreach (var header in this.Headers)
@@ -91,7 +113,11 @@ namespace SunPhotometer
             foreach (var objRow in this.DataRows)
                 table.Rows.Add(objRow);
 
-            return table;
+            var dataView = (from row in table.AsEnumerable()
+                           orderby row.Field<int>("Year"), row.Field<int>("Month"), row.Field<int>("Day"), row.Field<int>("Hour"), row.Field<int>("Min"), row.Field<float>("Sec") ascending
+                           select row).AsDataView();
+
+            return dataView;
         }
     }
 

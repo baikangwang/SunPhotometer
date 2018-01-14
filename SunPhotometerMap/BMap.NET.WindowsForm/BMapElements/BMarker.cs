@@ -85,14 +85,11 @@ namespace BMap.NET.WindowsForm.BMapElements
             {
                 return _rect;
             }
+            protected set
+            {
+                _rect = value;
+            }
         }
-
-        private MapStage _mapStage = MapStage.Normal;
-
-        /// <summary>
-        /// 地图类型
-        /// </summary>
-        public MapStage MapStage { get { return _mapStage; } set { _mapStage = value; } }
 
         /// <summary>
         /// 绘制方法
@@ -104,7 +101,7 @@ namespace BMap.NET.WindowsForm.BMapElements
         public override void Draw(System.Drawing.Graphics g, LatLngPoint center, int zoom, System.Drawing.Size screen_size)
         {
             Point p = MapHelper.GetScreenLocationByLatLng(Location, center, zoom, screen_size);  //屏幕坐标
-            Bitmap b = MapStage == MapStage.Normal ? Properties.BMap.ico_marker : Properties.BMap.icon_station;
+            Bitmap b = Properties.BMap.ico_marker;
             g.DrawImage(b, new Rectangle(p.X - b.Width / 2, p.Y - b.Height, b.Width, b.Height));
             using (Font f = new Font("微软雅黑", 9))
             {

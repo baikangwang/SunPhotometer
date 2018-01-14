@@ -15,8 +15,6 @@ using BMap.NET.WindowsForm.DrawingObjects;
 
 namespace BMap.NET.WindowsForm
 {
-    public delegate object DataSourceEvent(object sender, EventArgs e);
-
     /// <summary>
     /// 百度地图显示控件
     /// </summary>
@@ -778,12 +776,13 @@ namespace BMap.NET.WindowsForm
                             else
                             {
                                 _bStationTipControl.Marker = _current_selected_marker;
-                                _bStationTipControl.Location = new Point(point.X - _bMarkerTipControl.Width / 3 + 37, point.Y - _bMarkerTipControl.Height - p.Value.Rect.Height);
+                                _bStationTipControl.Location = new Point(point.X - _bStationTipControl.Width / 3 + 37, point.Y - _bStationTipControl.Height - p.Value.Rect.Height);
                                 _bStationTipControl.VisibleChanged += (sender, args) =>
                                 {
                                     if (_bStationTipControl.Visible)
                                     {
-                                        var dataSource = this.OnStationVisibleChanged(sender, args);
+                                        var station_marker = _bStationTipControl.Marker as BStationMarker;
+                                        var dataSource = this.OnStationVisibleChanged(sender, station_marker.Station);
                                         _bStationTipControl.SetAodData(dataSource);
                                     }
                                 };
@@ -1733,17 +1732,17 @@ namespace BMap.NET.WindowsForm
 
         #region 公开方法
 
-        public void AddMarks(LatLngPoint point, string name, string address)
+        public void AddMarks(LatLngPoint point, string name, string address,string station_id)
         {
-            BMarker marker = new BMarker
+            BMarker marker = new BStationMarker
             {
                 Index = _markers.Count,
                 Location = point,
                 Name = name,
-                Remarks = "我的备注",
+                Remarks = "Station",
                 Selected = false,
                 Address = address,
-                MapStage = this.MapStage
+                Station = station_id
             };
             _markers.Add(marker.Index.ToString(), marker);
         }
@@ -2303,10 +2302,10 @@ namespace BMap.NET.WindowsForm
 
         #region event handler
 
-        protected object OnStationVisibleChanged(object sender, EventArgs e)
+        protected object OnStationVisibleChanged(object sender, string station)
         {
             if (this._stationVisibleChanged != null)
-                return this._stationVisibleChanged(sender, e);
+                return this._stationVisibleChanged(sender, new StationEventAgrs() { Station = station });
             return null;
         }
 

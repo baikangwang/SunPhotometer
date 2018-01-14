@@ -6,7 +6,7 @@ using System.Text;
 
 namespace SunPhotometer
 {
-    public class Stations:List<Station>
+    public class Stations:Dictionary<string,Station>
     {
         public static Stations Read(string file)
         {
@@ -18,7 +18,7 @@ namespace SunPhotometer
                     HeaderMode = Csv.HeaderMode.HeaderPresent
                 }))
                 {
-                    stations.Add(new Station(line["Stid"], line["Lat"], line["Lon"],
+                    stations.Add(line["Stid"], new Station(line["Stid"], line["Lat"], line["Lon"],
                         line["Alt"], line["Stname"], line["calibr"]));
                 }
             }

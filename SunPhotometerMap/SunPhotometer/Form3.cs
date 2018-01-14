@@ -34,7 +34,7 @@ namespace SunPhotometer
             string csvfile = @"D:\Working\Projects\SunPhotometer\data\AOD\stations_aod.csv";
 
             var stations = Stations.Read(csvfile);
-            var station = stations.FirstOrDefault(s => s.StationId == "54662");
+            var station = stations["54662"];
 
             var aod = new AOD(station, DateTime.Now);
 

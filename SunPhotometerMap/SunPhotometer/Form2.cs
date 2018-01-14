@@ -36,13 +36,14 @@ namespace SunPhotometer
 
         #region event handling methods
 
-        private object BMap_StationVisibleChanged(object sender, EventArgs e)
+        private object BMap_StationVisibleChanged(object sender, StationEventAgrs e)
         {
             var stations = App.Current.Stations;
-            var station = stations.FirstOrDefault(s => s.StationId == "54102");
+            var station = stations[e.Station];
 
             var aod = new AOD(station, DateTime.Now);
-            return aod.ToDataTable();
+            // TODO: alert user there is no data for this station
+            return aod.HasData ? aod.ToDataTable() : null;
         }
 
         private void Form2_Load(object sender, EventArgs e)
@@ -51,10 +52,10 @@ namespace SunPhotometer
             this.ckbDrag.Checked = false;
             this.ckbStyle.Checked = false;
 
-            foreach (var station in App.Current.Stations)
+            foreach (var station in App.Current.Stations.Values)
             {
                 this.bMap.AddMarks(new BMap.NET.WindowsForm.LatLngPoint(station.Lontitude, station.Latitude),
-                    station.Name, station.Name);
+                    station.Name, station.Name, station.StationId);
             }
         }
 

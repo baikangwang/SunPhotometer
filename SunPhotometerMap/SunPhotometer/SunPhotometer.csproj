@@ -98,7 +98,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="aodconfig.schema.json" />
-    <None Include="app.json" />
+    <None Include="app.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="app.schema.json" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

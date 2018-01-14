@@ -84,6 +84,7 @@
     </Compile>
     <Compile Include="BMapElements\BMarker.cs" />
     <Compile Include="BMapElements\BPoint.cs" />
+    <Compile Include="BMapElements\BStationMarker.cs" />
     <Compile Include="BStationTipControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -234,6 +235,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="RouteType.cs" />
+    <Compile Include="StationEvent.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="BCityControl.resx">
