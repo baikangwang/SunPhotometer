@@ -18,10 +18,13 @@ build/generated-sources/
 dist/
 test/
 source/
-
+test*.py
+Sunphotometer/Aot/inputpar.dat
+Sunphotometer/Aot/temporalg
 
 ## VS
 .vs/
 bin/
 obj/
+*.code-workspace
 
