@@ -45,12 +45,7 @@ class AodSetting:
         -------
 
         """
-        # convert json_setting path to abspath
-        if not os.path.isfile(json_setting):
-            json_setting = os.path.join(
-                os.path.abspath(__file__), json_setting)
-
-        if not os.path.exists(json_setting):
+        if not os.path.isfile(json_setting) or not os.path.exists(json_setting):
             raise IOError('{0} not exists'.format(json_setting))
 
         obj_setting = None

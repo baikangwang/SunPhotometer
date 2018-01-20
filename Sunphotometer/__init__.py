@@ -20,3 +20,7 @@ sys.path.append(urarpath)
 # jars=[os.path.join(libpath,f) for f in os.listdir(libpath) if os.path.isfile(os.path.join(libpath,f)) and f.endswith(".jar")]
 # for jar in jars:
 #     sys.path.append(jar)
+
+from aodprocess import *
+from aodsetting import *
+from stations import *

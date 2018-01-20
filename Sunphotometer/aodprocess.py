@@ -7,7 +7,7 @@ import os
 import sys
 import os.path as path
 import datetime
-import Sunphotometer.spdata as spdata
+import spdata
 import glob
 
 from aodsetting import *
