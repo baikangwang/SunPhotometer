@@ -11,6 +11,8 @@ namespace BMap.NET.WindowsForm
         /// The Id of the station
         /// </summary>
         public string Station { get; set; }
+
+        public DateTime Date { get; set; }
     }
 
     public delegate object DataSourceEvent(object sender, StationEventAgrs e);

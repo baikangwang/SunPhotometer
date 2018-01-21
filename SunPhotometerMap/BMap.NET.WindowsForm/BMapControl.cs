@@ -777,14 +777,23 @@ namespace BMap.NET.WindowsForm
                             {
                                 _bStationTipControl.Marker = _current_selected_marker;
                                 _bStationTipControl.Location = new Point(point.X - _bStationTipControl.Width / 3 + 37, point.Y - _bStationTipControl.Height - p.Value.Rect.Height);
+                                Action<object, EventArgs> stationEvent = (sender, args) =>
+                                 {
+                                     if (_bStationTipControl.Visible)
+                                     {
+                                         var station_marker = _bStationTipControl.Marker as BStationMarker;
+                                         var station_date = _bStationTipControl.Date;
+                                         var dataSource = this.OnStationVisibleChanged(sender, station_marker.Station, station_date);
+                                         _bStationTipControl.SetAodData(dataSource);
+                                     }
+                                 };
                                 _bStationTipControl.VisibleChanged += (sender, args) =>
                                 {
-                                    if (_bStationTipControl.Visible)
-                                    {
-                                        var station_marker = _bStationTipControl.Marker as BStationMarker;
-                                        var dataSource = this.OnStationVisibleChanged(sender, station_marker.Station);
-                                        _bStationTipControl.SetAodData(dataSource);
-                                    }
+                                    stationEvent.Invoke(sender, args);
+                                };
+                                _bStationTipControl.StationDateChanged += (sender, args) =>
+                                {
+                                    stationEvent.Invoke(sender, args);
                                 };
                                 _bStationTipControl.Visible = true;
                             }
@@ -2302,10 +2311,10 @@ namespace BMap.NET.WindowsForm
 
         #region event handler
 
-        protected object OnStationVisibleChanged(object sender, string station)
+        protected object OnStationVisibleChanged(object sender, string station,DateTime date)
         {
             if (this._stationVisibleChanged != null)
-                return this._stationVisibleChanged(sender, new StationEventAgrs() { Station = station });
+                return this._stationVisibleChanged(sender, new StationEventAgrs() { Station = station, Date = date });
             return null;
         }
 

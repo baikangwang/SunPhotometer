@@ -19,6 +19,16 @@ namespace BMap.NET.WindowsForm
     {
         private BMarker _marker;
 
+        private event EventHandler _stationDateChanged;
+        public event EventHandler StationDateChanged
+        {
+            add { _stationDateChanged += value; }
+            remove { _stationDateChanged -= value; }
+        }
+
+        private DateTime _date = DateTime.Now;
+        public DateTime Date { get { return _date; }set { _date = value; } }
+
         /// <summary>
         /// 与之对应的标记点
         /// </summary>
@@ -41,6 +51,7 @@ namespace BMap.NET.WindowsForm
         public BStationTipControl()
         {
             InitializeComponent();
+            this.dtpDate.Value = DateTime.Now;
             this.InitDataGridAod();
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true);
             UpdateStyles();
@@ -142,9 +153,30 @@ namespace BMap.NET.WindowsForm
         public void SetAodData(object aodData)
         {
             if (aodData != null)
+            {
                 this.dgAod.DataSource = aodData;
+                label3.Text = string.Format("{0}: {1} 行", this._date.ToString("yyyy - MM"), this.dgAod.Rows.Count);
+            }
+            else
+            {
+                this.dgAod.DataSource = null;
+                label3.Text = string.Format("{0}: {1}", this._date.ToString("yyyy - MM"), "没有数据");
+            }
         }
 
         #endregion public methods
+
+        private void dtpDate_ValueChanged(object sender, EventArgs e)
+        {
+            this._date = this.dtpDate.Value;
+            if (_stationDateChanged != null)
+                this._stationDateChanged(sender, e);
+        }
+
+        private void BStationTipControl_VisibleChanged(object sender, EventArgs e)
+        {
+            if (!this.Visible)
+                this._date = DateTime.Now;
+        }
     }
 }

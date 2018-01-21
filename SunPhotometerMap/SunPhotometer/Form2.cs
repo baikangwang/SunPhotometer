@@ -41,7 +41,7 @@ namespace SunPhotometer
             var stations = App.Current.Stations;
             var station = stations[e.Station];
 
-            var aod = new AOD(station, DateTime.Now);
+            var aod = new AOD(station, e.Date);
             // TODO: alert user there is no data for this station
             return aod.HasData ? aod.ToDataTable() : null;
         }
