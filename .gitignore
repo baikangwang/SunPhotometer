@@ -21,6 +21,7 @@ source/
 test*.py
 Sunphotometer/Aot/inputpar.dat
 Sunphotometer/Aot/temporalg
+logs/
 
 ## VS
 .vs/

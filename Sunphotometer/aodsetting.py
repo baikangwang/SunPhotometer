@@ -9,7 +9,7 @@ from stations import Station, Stations
 
 
 class AodSetting:
-    def __init__(self, json_setting=None, data_dir=None, para_dir=None, ftp_ip=None, ftp_user=None, ftp_psw=None, ftp_root="/sunphotometer"):
+    def __init__(self, json_setting=None, data_dir=None, para_dir=None, log_dir=None, ftp_ip=None, ftp_user=None, ftp_psw=None, ftp_root="/sunphotometer"):
         """Aod process setting. When json_setting presents then it initializes from the json setting file and ommit other parameters
 
         Parameters
@@ -28,7 +28,7 @@ class AodSetting:
         """
 
         if json_setting is None:
-            self.__init_normal(data_dir, para_dir, ftp_ip,
+            self.__init_normal(data_dir, para_dir, log_dir, ftp_ip,
                                ftp_user, ftp_psw, ftp_root)
         else:
             self.__init_json(json_setting)
@@ -60,7 +60,7 @@ class AodSetting:
             self.data_dir = obj_setting["data_dir"]
         else:
             self.data_dir = os.path.join(
-                os.path.dirname(os.path.abspath(__file__)), 'data','AOD')
+                os.path.dirname(os.path.abspath(__file__)), 'data', 'AOD')
 
         if 'para_dir' in obj_setting:
             self.para_dir = obj_setting['para_dir']
@@ -92,9 +92,15 @@ class AodSetting:
             raise IOError('{0} invalid aod setting: {1}',
                           json_setting, 'ftp_root not exists')
 
+        if 'log_dir' in obj_setting:
+            self.log_dir = obj_setting['log_dir']
+        else:
+            raise IOError('{0} invalid aod setting: {1}',
+                          json_setting, 'log_dir not exists')
+
         self.__init_paras()
 
-    def __init_normal(self, data_dir, para_dir, ftp_ip, ftp_user, ftp_psw, ftp_root="/sunphotometer"):
+    def __init_normal(self, data_dir, para_dir, log_dir, ftp_ip, ftp_user, ftp_psw, ftp_root="/sunphotometer"):
         """Initialize the Aod Setting
 
         Parameters
@@ -106,6 +112,7 @@ class AodSetting:
         ftp_user:                      (*string*) the ftp user
         ftp_psw:                       (*string*) the ftp password
         ftp_root="/sunphotometer":     (*string*) the default root ftp dir
+        log_dir                  :     (*string*) the base log dir
 
         Returns
         -------
@@ -117,6 +124,7 @@ class AodSetting:
         self.ftp_user = ftp_user
         self.ftp_psw = ftp_psw
         self.ftp_root = ftp_root
+        self.log_dir = log_dir
 
         self.__init_paras()
 
@@ -158,6 +166,8 @@ class AodSetting:
             os.makedirs(self.ascii_dir)
         if not path.exists(self.aot_dir):
             os.makedirs(self.aot_dir)
+        if not path.exists(self.log_dir):
+            os.makedirs(self.log_dir)
 
         # init parameter data dirs
         if not path.exists(self.para_dir):
