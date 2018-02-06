@@ -1,8 +1,10 @@
 ﻿{
   "data_dir": "D:\\Working\\Projects\\SunPhotometer\\data\\AOD",
   "para_dir": "D:\\Working\\Projects\\SunPhotometer\\Sunphotometer",
+  "log_dir": "D:\\Working\\Projects\\SunPhotometer\\logs",
   "ftp_ip": "192.168.3.20",
   "ftp_user": "bkwang",
   "ftp_psw": "bkwang",
-  "ftp_root": "/sunphotometer"
+  "ftp_root": "/sunphotometer",
+  "SK": "GMqDruxjOz2PkfMlNKmDlscc"
 }

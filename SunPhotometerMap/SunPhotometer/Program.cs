@@ -13,9 +13,10 @@ namespace SunPhotometer
         [STAThread]
         private static void Main()
         {
+            App.Current.Logger.Info("--- SunPhotometer Run ---");
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form2());
+            Application.Run(new fmMap());
         }
     }
 }
