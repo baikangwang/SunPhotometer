@@ -5,5 +5,6 @@
     "ftp_ip":"192.168.3.20",
     "ftp_user":"bkwang",
     "ftp_psw":"bkwang",
-    "ftp_root" :"/data2/cawas"
+    "ftp_root" :"/data2/cawas",
+    "SK": "GMqDruxjOz2PkfMlNKmDlscc"
 }
