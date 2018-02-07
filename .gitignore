@@ -28,4 +28,6 @@ logs/
 bin/
 obj/
 *.code-workspace
+*.csproj.user
+packages/
 
