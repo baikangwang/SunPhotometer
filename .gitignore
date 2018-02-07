@@ -1,23 +1,32 @@
-# Compiled class file
-*.class
-
-# Log file
-*.log
-
-# BlueJ files
-*.ctxt
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
 # Package Files #
-*.jar
+# *.jar
 *.war
 *.ear
 *.zip
 *.tar.gz
 # *.rar
+#python cache
+*$py.class
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 .idea/
+.vscode/
+MeteoInfo/
+build/empty/
+build/generated-sources/
+dist/
+test/
+source/
+test*.py
+Sunphotometer/Aot/inputpar.dat
+Sunphotometer/Aot/temporalg
+logs/
+
+## VS
+.vs/
+bin/
+obj/
+*.code-workspace
+*.csproj.user
+packages/
