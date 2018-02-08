@@ -6,7 +6,7 @@ if not exist %base_dir% mkdir %base_dir%
 
 echo --- Install AOD scripts ---
 if not exist %base_dir%\SunPhotometer (
-    xcopy .\SunPhotometer %base_dir%\SunPhotometer /e/h/s/y
+    xcopy .\SunPhotometer\* %base_dir%\SunPhotometer\ /e/h/s/y
 ) else (
     if exist %base_dir%\SunPhotometer\CalFile (
         echo     Backup the existing CalFiles
@@ -15,7 +15,7 @@ if not exist %base_dir%\SunPhotometer (
         rem make new backup
         move %base_dir%\SunPhotometer\CalFile %base_dir%\CalFile.backup
         rmdir /q /s %base_dir%\SunPhotometer
-        xcopy .\SunPhotometer %base_dir%\SunPhotometer /e/h/s/y
+        xcopy .\SunPhotometer\* %base_dir%\SunPhotometer\ /e/h/s/y
         move %base_dir%\CalFile.backup %base_dir%\SunPhotometer\
     )
 )
@@ -33,8 +33,7 @@ xcopy .\*.json %base_dir% /e/h/s/y
 echo --- Create Scheduled Task ---
 rem https://www.howtogeek.com/51236/how-to-create-modify-and-delete-scheduled-tasks-from-the-command-line/
 rem Create 'AOD' to run C:\SunPhotometer\run.bat at 9 AM everyday
-SchTasks /query /TN "AOD" >NUL 2>&1
-if %errorlevel% EQ 0 SchTasks /Delete /TN "AOD"
+SchTasks /query /TN "AOD" >NUL 2>&1 && SchTasks /Delete /TN "AOD"
 SchTasks /Create /SC DAILY /TN "AOD" /TR "%base_dir%\run.bat" /ST 09:00
 
 echo --- Install SunPhotometer Map ---

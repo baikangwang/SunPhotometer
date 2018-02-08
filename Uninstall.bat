@@ -23,9 +23,7 @@ del %base_dir%\*.json
 echo --- Uninstall Scheduled Task ---
 rem https://www.howtogeek.com/51236/how-to-create-modify-and-delete-scheduled-tasks-from-the-command-line/
 rem Create 'AOD' to run C:\SunPhotometer\run.bat at 9 AM everyday
-SchTasks /query /TN "AOD" >NUL 2>&1
-if %errorlevel% EQ 0 SchTasks /Delete /TN "AOD"
-
+SchTasks /query /TN "AOD" >NUL 2>&1 && SchTasks /Delete /TN "AOD"
 
 echo --- Uninstall SunPhotometer Map ---
 if exist %base_dir%\sunphotometer_map.exe del %base_dir%\sunphotometer_map.exe
