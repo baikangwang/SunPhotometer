@@ -2,13 +2,13 @@
 set base_dir=C:\SunPhotometer
 
 echo --- Uninstall AOD scripts ---
-
-if exist %base_dir%\SunPhotometer\CalFile (
+set script_dir=%base_dir%\sunphotometer
+if exist %script_dir%\CalFile (
     echo     Backup the existing CalFiles
-    move %base_dir%\SunPhotometer\CalFile %base_dir%\CalFile
-    rmdir /q /s %base_dir%\SunPhotometer
-    mkdir %base_dir%\SunPhotometer
-    move %base_dir%\CalFile %base_dir%\SunPhotometer\
+    move %script_dir%\CalFile %base_dir%\CalFile
+    rmdir /q /s %script_dir%
+    mkdir %script_dir%
+    move %base_dir%\CalFile %script_dir%\
 )
 
 del %base_dir%\run.*

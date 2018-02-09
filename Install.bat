@@ -5,18 +5,19 @@ echo --- Init install directory ---
 if not exist %base_dir% mkdir %base_dir%
 
 echo --- Install AOD scripts ---
-if not exist %base_dir%\SunPhotometer (
-    xcopy .\SunPhotometer\* %base_dir%\SunPhotometer\ /e/h/s/y
+set script_dir=%base_dir%\Sunphotometer
+if not exist %script_dir% (
+    xcopy .\Sunphotometer\* %script_dir%\ /e/h/s/y
 ) else (
-    if exist %base_dir%\SunPhotometer\CalFile (
+    if exist %script_dir%\CalFile (
         echo     Backup the existing CalFiles
         rem the last backup
         if exist %base_dir%\CalFile.backup rmdir /q /s %base_dir%\CalFile.backup
         rem make new backup
-        move %base_dir%\SunPhotometer\CalFile %base_dir%\CalFile.backup
-        rmdir /q /s %base_dir%\SunPhotometer
-        xcopy .\SunPhotometer\* %base_dir%\SunPhotometer\ /e/h/s/y
-        move %base_dir%\CalFile.backup %base_dir%\SunPhotometer\
+        move %script_dir%\CalFile %base_dir%\CalFile.backup
+        rmdir /q /s %script_dir%
+        xcopy .\Sunphotometer\* %script_dir%\ /e/h/s/y
+        move %base_dir%\CalFile.backup %script_dir%\
     )
 )
 

@@ -112,7 +112,6 @@ class AodProcess:
                 err_msg = "[calculate]->{0}".format(e.message)
                 print err_msg
                 logging.error(err_msg)
-                return
 
     def __download(self, year, month, day):
         """download k7 data through ftp.
@@ -158,25 +157,35 @@ class AodProcess:
 
         # Loop - unrar files for each station
         for stid in stids:
-            ddir = os.path.join(self.aodSetting.dd_dir, stid,
-                                t.strftime('%Y%m'))
-            if not os.path.exists(ddir):
-                logging.info('[unrar]->{0} not exists'.format(ddir))
-                continue
-            fns = glob.glob(os.path.join(ddir, '*' + stid +
-                                         '*' + t.strftime('%Y%m%d') + '*' + '*.rar'))
-            for fn in fns:
-                if os.path.getsize(os.path.join(ddir, fn)) == 0:
+            try:
+                ddir = os.path.join(self.aodSetting.dd_dir, stid,
+                                    t.strftime('%Y%m'))
+                if not os.path.exists(ddir):
+                    logging.info('[unrar]->{0} not exists'.format(ddir))
                     continue
-                if fn.endswith('.rar') or fn.endswith('.RAR'):
-                    print 'Un-rar [{0}] => {1}'.format(stid, fn)
-                    logging.info(
-                        '[unrar]->Un-rar [{0}] => {1}'.format(stid, fn))
-                    stk7dir = os.path.join(
-                        k7dir, stid, t.strftime('%Y%m'), t.strftime('%d'))
-                    if not os.path.isdir(stk7dir):
-                        os.makedirs(stk7dir)
-                    spdata.unrar(os.path.join(ddir, fn), stk7dir)
+                fns = glob.glob(os.path.join(ddir, '*' + stid +
+                                            '*' + t.strftime('%Y%m%d') + '*' + '*.rar'))
+                for fn in fns:
+                    try:
+                        if os.path.getsize(os.path.join(ddir, fn)) == 0:
+                            continue
+                        if fn.endswith('.rar') or fn.endswith('.RAR'):
+                            print 'Un-rar [{0}] => {1}'.format(stid, fn)
+                            logging.info(
+                                '[unrar]->Un-rar [{0}] => {1}'.format(stid, fn))
+                            stk7dir = os.path.join(
+                                k7dir, stid, t.strftime('%Y%m'), t.strftime('%d'))
+                            if not os.path.isdir(stk7dir):
+                                os.makedirs(stk7dir)
+                            spdata.unrar(os.path.join(ddir, fn), stk7dir)
+                    except Exception as e:
+                        logging.error('[unrar]->Un-rar Failed [{0}] => {1}, {2}'.format(stid, fn,e.message))
+                        err_msg = '[unrar]->Un-rar Failed [{0}] => {1}'.format(stid, fn)
+                        print err_msg
+            except Exception as e:
+                logging.error('[unrar]->Un-rar Failed [{0}] => {1}'.format(stid,e.message))
+                err_msg = '[unrar]->Un-rar Failed [{0}]'.format(stid)
+                print err_msg
 
         print 'Un-rar Done!'
         logging.info('[unrar]->Un-rar Done!')
@@ -206,32 +215,42 @@ class AodProcess:
 
         # Loop - merge k7 files for each station
         for stid in stids:
-            stk7dir = path.join(
-                k7dir, stid, t.strftime('%Y%m'), t.strftime('%d'))
-            if not path.isdir(stk7dir):
-                continue
+            try:
+                stk7dir = path.join(
+                    k7dir, stid, t.strftime('%Y%m'), t.strftime('%d'))
+                if not path.isdir(stk7dir):
+                    continue
 
-            fns = glob.glob(path.join(stk7dir, '*.k7'))
-            if len(fns) == 0:
-                continue
+                fns = glob.glob(path.join(stk7dir, '*.k7'))
+                if len(fns) == 0:
+                    continue
 
-            # check k7 and remove it if empty file
-            for fn in fns:
-                if path.getsize(fn) == 0:
-                    print 'Empty K7 [{0}] => {1} '.format(stid, fn)
-                    logging.info(
-                        '[merge]->Empty K7 [{0}] => {1}'.format(stid, fn))
-                    fns.remove(fn)
+                # check k7 and remove it if empty file
+                for fn in fns:
+                    try:
+                        if path.getsize(fn) == 0:
+                            print 'Empty K7 [{0}] => {1} '.format(stid, fn)
+                            logging.info(
+                                '[merge]->Empty K7 [{0}] => {1}'.format(stid, fn))
+                            fns.remove(fn)
+                    except Exception as e:
+                        logging.error('[merge]->Merge Failed Remove [{0}] => {1}, {2}'.format(stid, fn,e.message))
+                        err_msg = '[merge]->Merge Failed Remove [{0}] => {1}'.format(stid, fn)
+                        print err_msg
 
-            stmdir = path.join(mdir, stid, t.strftime('%Y%m'))
-            if not os.path.exists(stmdir):
-                os.makedirs(stmdir)
+                stmdir = path.join(mdir, stid, t.strftime('%Y%m'))
+                if not os.path.exists(stmdir):
+                    os.makedirs(stmdir)
 
-            outfn = path.join(stmdir, stid + '_' +
-                              t.strftime('%Y%m%d') + '_merge.k7')
-            spdata.merge_files(fns, outfn)
-            print 'Merge [{0}] => {1}'.format(stid, outfn)
-            logging.info('[merge]->Merge [{0}] => {1}'.format(stid, outfn))
+                outfn = path.join(stmdir, stid + '_' +
+                                t.strftime('%Y%m%d') + '_merge.k7')
+                spdata.merge_files(fns, outfn)
+                print 'Merge [{0}] => {1}'.format(stid, outfn)
+                logging.info('[merge]->Merge [{0}] => {1}'.format(stid, outfn))
+            except:
+                logging.error('[merge]->Merge Failed [{0}] => {1}, {2}'.format(stid, outfn,sys.exc_info()[1]))
+                err_msg = '[merge]->Merge Failed [{0}] => {1}'.format(stid, outfn)
+                print err_msg
 
         print 'Merge Done!'
         logging.info('[merge]->Merge Done!')
@@ -267,74 +286,79 @@ class AodProcess:
         logging.info('[calculate]->Calculate AOD...')
 
         for stId in stations.getstIds():
-            station = stations.get(stId)
-            fn = station.stId
-            k7fn = path.join(self.aodSetting.merge_dir, fn, t.strftime('%Y%m'), fn + "_" +
-                             t.strftime("%Y%m%d") + "_merge.K7")
-            if not os.path.exists(k7fn):
-                continue
-            print '[{0}]: Ready'.format(fn)
-            logging.info('[calculate]->[{0}]: Ready'.format(fn))
-            nsu_dir = path.join(ascdir, fn, t.strftime('%Y%m'))
-            nsufn = path.join(nsu_dir, fn + "_" +
-                              t.strftime("%Y%m%d") + '.NSU')
-            if not os.path.exists(nsufn):
-                if not os.path.exists(nsu_dir):
-                    os.makedirs(nsu_dir)
-                rr = spdata.decode(k7fn)
-                r = spdata.extract(rr, 'NSU')
-                spdata.save(r, nsufn)
-                print '[{0}]: Output nsu file'.format(fn)
-                logging.info('[calculate]->[{0}]: Output nsu file'.format(fn))
+            try:
+                station = stations.get(stId)
+                fn = station.stId
+                k7fn = path.join(self.aodSetting.merge_dir, fn, t.strftime('%Y%m'), fn + "_" +
+                                t.strftime("%Y%m%d") + "_merge.K7")
+                if not os.path.exists(k7fn):
+                    continue
+                print '[{0}]: Ready'.format(fn)
+                logging.info('[calculate]->[{0}]: Ready'.format(fn))
+                nsu_dir = path.join(ascdir, fn, t.strftime('%Y%m'))
+                nsufn = path.join(nsu_dir, fn + "_" +
+                                t.strftime("%Y%m%d") + '.NSU')
+                if not os.path.exists(nsufn):
+                    if not os.path.exists(nsu_dir):
+                        os.makedirs(nsu_dir)
+                    rr = spdata.decode(k7fn)
+                    r = spdata.extract(rr, 'NSU')
+                    spdata.save(r, nsufn)
+                    print '[{0}]: Output nsu file'.format(fn)
+                    logging.info('[calculate]->[{0}]: Output nsu file'.format(fn))
 
-            # check if the external program and the parameter files are ready
-            validated = True
-            exefn = self.aodSetting.p_aot_exe
-            if not os.path.exists(exefn):
-                print '[{0}]: Not Found Aot program, {1}'.format(fn, exefn)
-                logging.warn(
-                    '[calculate]->[{0}]: Not Found Aot program, {1}'.format(fn, exefn))
-                validated = False
+                # check if the external program and the parameter files are ready
+                validated = True
+                exefn = self.aodSetting.p_aot_exe
+                if not os.path.exists(exefn):
+                    print '[{0}]: Not Found Aot program, {1}'.format(fn, exefn)
+                    logging.warn(
+                        '[calculate]->[{0}]: Not Found Aot program, {1}'.format(fn, exefn))
+                    validated = False
 
-            inputfn = self.aodSetting.p_aot_input
-            if not os.path.exists(inputfn):
-                print '[{0}]: Not Found input parameter data, {1}'.format(fn, inputfn)
-                logging.warn(
-                    '[calculate]->[{0}]: Not Found input parameter data, {1}'.format(fn, inputfn))
-                validated = False
+                inputfn = self.aodSetting.p_aot_input
+                if not os.path.exists(inputfn):
+                    print '[{0}]: Not Found input parameter data, {1}'.format(fn, inputfn)
+                    logging.warn(
+                        '[calculate]->[{0}]: Not Found input parameter data, {1}'.format(fn, inputfn))
+                    validated = False
 
-            ozonefn = self.aodSetting.p_aot_ozone
-            if not os.path.exists(ozonefn):
-                print '[{0}]: Not Found ozone data, {1}'.format(fn, ozonefn)
-                logging.warn(
-                    '[calculate]->[{0}]: Not Found input parameter data, {1}'.format(fn, inputfn))
-                validated = False
+                ozonefn = self.aodSetting.p_aot_ozone
+                if not os.path.exists(ozonefn):
+                    print '[{0}]: Not Found ozone data, {1}'.format(fn, ozonefn)
+                    logging.warn(
+                        '[calculate]->[{0}]: Not Found input parameter data, {1}'.format(fn, inputfn))
+                    validated = False
 
-            calfn = path.join(self.aodSetting.p_cal_dir,
-                              "calibr" + station.calibr + ".cal")
-            if not os.path.exists(calfn):
-                print '[{0}]: Not Found calculation paramter data, {1}'.format(fn, calfn)
-                logging.warn(
-                    '[calculate]->[{0}]: Not Found calculation paramter data, {1}'.format(fn, calfn))
-                validated = False
+                calfn = path.join(self.aodSetting.p_cal_dir,
+                                "calibr" + station.calibr + ".cal")
+                if not os.path.exists(calfn):
+                    print '[{0}]: Not Found calculation paramter data, {1}'.format(fn, calfn)
+                    logging.warn(
+                        '[calculate]->[{0}]: Not Found calculation paramter data, {1}'.format(fn, calfn))
+                    validated = False
 
-            if validated:
-                tao_dir = path.join(aotdir, fn, t.strftime('%Y%m'))
-                if not os.path.exists(tao_dir):
-                    os.makedirs(tao_dir)
-                taofn = path.join(tao_dir, fn + "_" +
-                                  t.strftime("%Y%m%d") + '.tao')
-                lat = station.lat
-                lon = station.lon
-                alt = station.alt
+                if validated:
+                    tao_dir = path.join(aotdir, fn, t.strftime('%Y%m'))
+                    if not os.path.exists(tao_dir):
+                        os.makedirs(tao_dir)
+                    taofn = path.join(tao_dir, fn + "_" +
+                                    t.strftime("%Y%m%d") + '.tao')
+                    lat = station.lat
+                    lon = station.lon
+                    alt = station.alt
 
-                spdata.cal_aot(wdir, calfn, taofn, nsufn,
-                               lat, lon, alt, alpha=1)
-                print '[{0}] => {1}'.format(fn, taofn)
-                logging.info('[calculate]->[{0}] => {1}'.format(fn, taofn))
-            else:
-                print '[{0}]: Abort'.format(fn)
-                logging.warn('[calculate]->[{0}]: Abort'.format(fn))
+                    spdata.cal_aot(wdir, calfn, taofn, nsufn,
+                                lat, lon, alt, alpha=1)
+                    print '[{0}] => {1}'.format(fn, taofn)
+                    logging.info('[calculate]->[{0}] => {1}'.format(fn, taofn))
+                else:
+                    print '[{0}]: Abort'.format(fn)
+                    logging.warn('[calculate]->[{0}]: Abort'.format(fn))
+            except Exception as e:
+                logging.error('[calculate]->Calculate Failed [{0}] => {1}'.format(stId,e.message))
+                err_msg = '[calculate]->Calculate Failed [{0}]'.format(stId)
+                print err_msg
 
         print 'Calculate Done!'
         logging.info('[calculate]->Calculate Done!')
