@@ -35,32 +35,32 @@ class AodProcess:
         """
         try:
             self.__download(year, month, day)
-        except Exception as e:
-            err_msg = "[download]->{0}".format(e.message)
+        except:
+            err_msg = "[download]->{0}".format(sys.exc_info()[1])
             print err_msg
             logging.error(err_msg)
             return
 
         try:
             self.__unrar(year, month, day)
-        except Exception as e:
-            err_msg = "[unrar]->{0}".format(e.message)
+        except:
+            err_msg = "[unrar]->{0}".format(sys.exc_info()[1])
             print err_msg
             logging.error(err_msg)
             return
 
         try:
             self.__merge(year, month, day)
-        except Exception as e:
-            err_msg = "[merge]->{0}".format(e.message)
+        except:
+            err_msg = "[merge]->{0}".format(sys.exc_info()[1])
             print err_msg
             logging.error(err_msg)
             return
 
         try:
             self.__cal_aod(year, month, day)
-        except Exception as e:
-            err_msg = "[calculate]->{0}".format(e.message)
+        except:
+            err_msg = "[calculate]->{0}".format(sys.exc_info()[1])
             print err_msg
             logging.error(err_msg)
             return
@@ -84,32 +84,32 @@ class AodProcess:
         if step == 1:
             try:
                 self.__download(year, month, day)
-            except Exception as e:
-                err_msg = "[download]->{0}".format(e.message)
+            except:
+                err_msg = "[download]->{0}".format(sys.exc_info()[1])
                 print err_msg
                 logging.error(err_msg)
                 return
         if step == 2:
             try:
                 self.__unrar(year, month, day)
-            except Exception as e:
-                err_msg = "[unrar]->{0}".format(e.message)
+            except:
+                err_msg = "[unrar]->{0}".format(sys.exc_info()[1])
                 print err_msg
                 logging.error(err_msg)
                 return
         if step == 3:
             try:
                 self.__merge(year, month, day)
-            except Exception as e:
-                err_msg = "[merge]->{0}".format(e.message)
+            except:
+                err_msg = "[merge]->{0}".format(sys.exc_info()[1])
                 print err_msg
                 logging.error(err_msg)
                 return
         if step == 4:
             try:
                 self.__cal_aod(year, month, day)
-            except Exception as e:
-                err_msg = "[calculate]->{0}".format(e.message)
+            except:
+                err_msg = "[calculate]->{0}".format(sys.exc_info()[1])
                 print err_msg
                 logging.error(err_msg)
                 return
@@ -176,7 +176,12 @@ class AodProcess:
                         k7dir, stid, t.strftime('%Y%m'), t.strftime('%d'))
                     if not os.path.isdir(stk7dir):
                         os.makedirs(stk7dir)
-                    spdata.unrar(os.path.join(ddir, fn), stk7dir)
+                    try:
+                        spdata.unrar(os.path.join(ddir, fn), stk7dir)
+                    except:
+                        print 'Un-rar [{0}] => BAD {1}'.format(stid, fn)
+                        logging.info(
+                            '[unrar]->Un-rar [{0}] => BAD {1}, {2}'.format(stid, fn,sys.exc_info()[1]))
 
         print 'Un-rar Done!'
         logging.info('[unrar]->Un-rar Done!')
