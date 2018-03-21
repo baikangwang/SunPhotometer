@@ -54,7 +54,7 @@ class AodSetting:
                 obj_setting = json.load(fjson)
         except:
             raise IOError('{0} invalid json format: {1}'.format(
-                json_setting, sys.exc_info()[0]))
+                json_setting, sys.exc_info()[1]))
 
         if 'data_dir' in obj_setting:
             self.data_dir = obj_setting["data_dir"]
